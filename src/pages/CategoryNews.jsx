@@ -1,26 +1,32 @@
-import React, { useEffect, useState } from "react";
 import { useLoaderData, useParams } from "react-router";
 import NewsCard from "../components/newsCard";
 
 const CategoryNews = () => {
   const { id } = useParams();
   const data = useLoaderData();
-  const [categoryNews, setCategoryNews] = useState([]);
+  // const [categoryNews, setCategoryNews] = useState([]);
 
-  useEffect(() => {
-    if (id == "0") {
-      setCategoryNews(data);
-    } else if (id == "1") {
-      const filteredNews = data.filter(
-        (news) => news.others.is_trending == true
-      );
+  // useEffect(() => {
+  //   if (id == "0") {
+  //     setCategoryNews(data);
+  //   } else if (id == "1") {
+  //     const filteredNews = data.filter(
+  //       (news) => news.others.is_trending == true,
+  //     );
 
-      setCategoryNews(filteredNews);
-    } else {
-      const filteredNews = data.filter((news) => id == news.category_id);
-      setCategoryNews(filteredNews);
-    }
-  }, [data, id]);
+  //     setCategoryNews(filteredNews);
+  //   } else {
+  //     const filteredNews = data.filter((news) => id == news.category_id);
+  //     setCategoryNews(filteredNews);
+  //   }
+  // }, [data, id]);
+
+  const categoryNews =
+    id == "0"
+      ? data
+      : id == "1"
+        ? data.filter((news) => news.others.is_trending)
+        : data.filter((news) => news.category_id == id);
 
   return (
     <div>

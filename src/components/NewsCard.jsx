@@ -1,4 +1,3 @@
-import React from "react";
 import { CiBookmark, CiShare2 } from "react-icons/ci";
 import { FaEye, FaStar } from "react-icons/fa";
 

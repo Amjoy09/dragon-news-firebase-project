@@ -20,13 +20,13 @@ const HomeLayout = () => {
       </header>
 
       <main className="w-11/12 mx-auto grid grid-cols-12 gap-5">
-        <section className="LEFT-BAR col-span-3">
+        <section className="LEFT-BAR col-span-3 sticky top-3 h-fit">
           <LeftBar></LeftBar>
         </section>
         <section className="MAIN col-span-6">
           <Outlet></Outlet>
         </section>
-        <section className="RIGHT-BAR col-span-3">
+        <section className="RIGHT-BAR col-span-3 sticky top-3 h-fit">
           <RightBar></RightBar>
         </section>
       </main>

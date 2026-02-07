@@ -7,7 +7,7 @@ const FindUs = () => {
   return (
     <div className="mt-7">
       <h2 className="text-[20px] font-semibold">Find Us On</h2>
-      <div className="FIND-US-BTNS join join-vertical w-full">
+      <div className="FIND-US-BUTT0NS join join-vertical w-full">
         <button className="btn rounded-t-sm bg-transparent shadow-none flex justify-start border-gray-300 py-7 hover:bg-blue-950 hover:text-white">
           <BiLogoFacebook
             size={24}
