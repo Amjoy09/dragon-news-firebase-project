@@ -1,25 +1,36 @@
-import React, { use } from "react";
 import { Link } from "react-router";
-import { AuthContext } from "../provider/AuthProvider";
+import { AuthContext } from "../provider/AuthContext";
+import { use, useState } from "react";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { toast } from "react-toastify";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Register = () => {
-  const { createUser, setUser } = use(AuthContext);
+  const [show, setShow] = useState(false);
+  const { auth } = use(AuthContext);
+
   const handleRegister = (e) => {
     e.preventDefault();
-    const form = e.target;
-    const name = form.name.value;
-    const photo = form.photo.value;
-    const email = form.email.value;
-    const password = form.password.value;
-    createUser(email, password)
-      .then((result) => {
-        const user = result.user;
-        setUser(user);
+
+    const email = e.target.email?.value;
+    const password = e.target.password?.value;
+
+    const RegExp =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+    if (!RegExp.test(password)) {
+      return toast.error(
+        "Please use 8+ characters with a mix of letters (upper & lower), numbers, and symbols.",
+      );
+    }
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((res) => {
+        console.log(res);
+        toast.success("Sign Up Successful");
       })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        alert(errorCode, errorMessage);
+      .catch((err) => {
+        console.log(err);
       });
   };
   return (
@@ -31,24 +42,6 @@ const Register = () => {
           </h1>
           <hr className="text-gray-200 my-6" />
           <fieldset className="fieldset">
-            <label type="email" className="text-[16px] font-semibold mb-1">
-              Email Address
-            </label>
-            <input
-              name="email"
-              placeholder="Email"
-              className="input w-full mb-4"
-              required
-            />
-            <label className="text-[16px] font-semibold mb-1">Password</label>
-            <input
-              name="password"
-              type="password"
-              className="input w-full mb-4"
-              placeholder="Password"
-              required
-            />
-
             <label className="text-[16px] font-semibold mb-1">Your Name</label>
             <input
               name="name"
@@ -59,10 +52,37 @@ const Register = () => {
             <label className="text-[16px] font-semibold mb-1">Photo URL</label>
             <input
               name="photo"
-              className="input w-full bg-blue-100"
+              className="input w-full bg-blue-100 mb-4"
               placeholder="Photo URL"
               required
             />
+            <label type="email" className="text-[16px] font-semibold mb-1">
+              Email Address
+            </label>
+            <input
+              name="email"
+              placeholder="Email"
+              className="input w-full mb-4"
+              required
+            />
+            <div className="relative">
+              <label className="text-[16px] font-semibold mb-1">Password</label>
+
+              <input
+                name="password"
+                type={show ? "text" : "password"}
+                className="input w-full mb-4"
+                placeholder="●●●●●●●●●●●"
+                required
+              />
+              <span
+                onClick={() => setShow(!show)}
+                className="absolute top-7.5 right-4 cursor-pointer z-20"
+              >
+                {" "}
+                {show ? <FaEye size={24} /> : <FaEyeSlash size={24} />}
+              </span>
+            </div>
 
             <button
               type="submit"

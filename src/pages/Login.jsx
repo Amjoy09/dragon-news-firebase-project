@@ -1,6 +1,6 @@
 import React, { use } from "react";
 import { Link } from "react-router";
-import { AuthContext } from "../provider/AuthProvider";
+import { AuthContext } from "../provider/AuthContext";
 
 const Login = () => {
   const { signIn } = use(AuthContext);
