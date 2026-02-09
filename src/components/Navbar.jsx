@@ -2,21 +2,24 @@ import React, { use } from "react";
 import { Link, NavLink } from "react-router";
 import userImg from "../assets/user.png";
 import { AuthContext } from "../provider/AuthContext";
+import { signOut } from "firebase/auth";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
-  const { user, logOut } = use(AuthContext);
+  const { reader, auth, setReader } = use(AuthContext);
   const handleLogOut = () => {
-    logOut()
+    signOut(auth)
       .then(() => {
-        alert("You have logged out successfully");
+        toast.success("You've Signed Out");
+        setReader(null);
       })
-      .catch((error) => {
-        console.log(error);
+      .catch((err) => {
+        toast.error(err.message);
       });
   };
   return (
     <div className="flex items-center justify-between">
-      <div className="">{user && user.email}</div>
+      <div className="">{reader && reader.email}</div>
       <div className="NAV text-accent text-[18px] font-medium flex gap-5">
         <NavLink to="/">Home</NavLink>
         <NavLink to="/about">About</NavLink>
@@ -24,7 +27,7 @@ const Navbar = () => {
       </div>
       <div className="LOGIN-BTN flex gap-5 items-center">
         <img src={userImg} alt="" />
-        {user ? (
+        {reader ? (
           <Link
             onClick={handleLogOut}
             className="bg-base-content text-[#ffffff] text-[20px] font-semibold px-8 py-1.5 hover:cursor-pointer"
