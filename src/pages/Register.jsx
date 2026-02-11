@@ -1,17 +1,20 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { AuthContext } from "../provider/AuthContext";
 import { use, useState } from "react";
-import {
-  createUserWithEmailAndPassword,
-  sendEmailVerification,
-  updateProfile,
-} from "firebase/auth";
+
 import { toast } from "react-toastify";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Register = () => {
   const [show, setShow] = useState(false);
-  const { auth } = use(AuthContext);
+  const {
+    auth,
+    createUserWithEmailAndPassFunc,
+    sendEmailVerificationFunc,
+    updateProfileFunc,
+  } = use(AuthContext);
+
+  const navigate = useNavigate();
 
   const handleRegister = (e) => {
     e.preventDefault();
@@ -30,19 +33,17 @@ const Register = () => {
       );
     }
 
-    createUserWithEmailAndPassword(auth, email, password)
+    createUserWithEmailAndPassFunc(email, password)
       .then((res) => {
-        updateProfile(auth.currentUser, {
-          displayName,
-          photoURL,
-        })
+        updateProfileFunc(photoURL, displayName)
           .then(() => {
-            sendEmailVerification(auth.currentUser)
+            sendEmailVerificationFunc()
               .then(() => {
                 console.log(res);
                 toast.success(
-                  "Please, Check your Gmail inbox/spam to validate your email",
+                  "Account created successfully! Please verify your email before login.",
                 );
+                navigate("/auth/login");
               })
               .catch((err) => {
                 console.log(err);
@@ -56,7 +57,7 @@ const Register = () => {
             toast.error(err.message);
           });
         console.log(res);
-        toast.success("Sign Up Successful");
+        // toast.success("Sign Up Successful");
       })
       .catch((err) => {
         const errCode = err.code;

@@ -1,29 +1,51 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { use, useState } from "react";
+import { use, useRef, useState } from "react";
 import { AuthContext } from "../provider/AuthContext";
 import { toast } from "react-toastify";
 import { LuEye, LuEyeClosed } from "react-icons/lu";
 
 const Login = () => {
   const [show, setShow] = useState(false);
-  const { auth, reader, setReader } = use(AuthContext);
+  const navigate = useNavigate();
+  const {
+    reader,
+    auth,
+    setReader,
+    signInWithEmailAndPassFunc,
+    sendPassResetEmailFunc,
+  } = use(AuthContext);
+  const emailRef = useRef();
+
+  const handleResetPass = (e) => {
+    e.preventDefault();
+    const email = emailRef.current.value;
+    console.log(email);
+
+    sendPassResetEmailFunc(email)
+      .then(() => {
+        toast.success("Check your Gmail to reset Password");
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  };
   const handleLogIn = (e) => {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
-    console.log({ email, password });
 
-    signInWithEmailAndPassword(auth, email, password)
+    signInWithEmailAndPassFunc(email, password)
       .then((res) => {
         console.log(res.user.emailVerified);
-        if (res.user.emailVerified == false) {
+        if (!res.user.emailVerified) {
           toast.error("Your Email is not verified");
+          auth.signOut();
           return;
         }
         setReader(res.user);
         toast.success("Logged in Successfully");
+        navigate("/");
       })
       .catch((err) => {
         const errCode = err.code;
@@ -46,6 +68,7 @@ const Login = () => {
               Email Address
             </label>
             <input
+              ref={emailRef}
               name="email"
               type="email"
               className="input w-full mb-4"
@@ -67,7 +90,13 @@ const Login = () => {
               </span>
             </div>
             <div>
-              <a className="link link-hover">Forgot password?</a>
+              <button
+                onClick={handleResetPass}
+                type="button"
+                className="link link-hover"
+              >
+                Forgot password?
+              </button>
             </div>
             <button
               type="submit"

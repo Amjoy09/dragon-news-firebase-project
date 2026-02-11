@@ -2,13 +2,13 @@ import React, { use } from "react";
 import { Link, NavLink } from "react-router";
 import userImg from "../assets/user.png";
 import { AuthContext } from "../provider/AuthContext";
-import { signOut } from "firebase/auth";
+
 import { toast } from "react-toastify";
 
 const Navbar = () => {
-  const { reader, auth, setReader } = use(AuthContext);
+  const { reader, setReader, SignOutFunc } = use(AuthContext);
   const handleLogOut = () => {
-    signOut(auth)
+    SignOutFunc()
       .then(() => {
         toast.success("You've Signed Out");
         setReader(null);

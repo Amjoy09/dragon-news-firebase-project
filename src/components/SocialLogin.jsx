@@ -1,9 +1,3 @@
-import {
-  GithubAuthProvider,
-  GoogleAuthProvider,
-  signInWithPopup,
-} from "firebase/auth";
-
 import React, { use } from "react";
 import { FaGithub, FaGoogle } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
@@ -11,32 +5,40 @@ import { AuthContext } from "../provider/AuthContext";
 import { toast } from "react-toastify";
 
 const SocialLogin = () => {
-  const { auth, setReader } = use(AuthContext);
-  const googleProvider = new GoogleAuthProvider();
-  const githubProvider = new GithubAuthProvider();
+  const { reader, setReader, googleSignInFunc, githubSignInFunc } =
+    use(AuthContext);
 
   const handleGoogleSignIn = () => {
-    signInWithPopup(auth, googleProvider)
+    if (reader) {
+      toast.info("You are already Logged in");
+      return;
+    }
+    googleSignInFunc()
       .then((res) => {
         console.log(res);
         setReader(res.user);
-        toast.success("Sign Up Successful");
+        toast.success("Sign In Successful");
       })
       .catch((err) => {
         console.log(err);
+        toast.error("Google Log in Failed");
       });
   };
 
   const handleGithubSignIn = () => {
-    signInWithPopup(auth, githubProvider)
+    if (reader) {
+      toast.info("You are already Logged in");
+      return;
+    }
+    githubSignInFunc()
       .then((res) => {
         console.log(res);
         setReader(res.user);
-        toast.success("Sign Up Successful");
+        toast.success("Sign In Successful");
       })
       .catch((err) => {
         console.log(err);
-        toast.error("Auth not Allowed");
+        toast.error("Github Log in Failed");
       });
   };
 
