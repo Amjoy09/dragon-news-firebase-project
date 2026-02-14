@@ -5,22 +5,31 @@ import { AuthContext } from "../provider/AuthContext";
 import { toast } from "react-toastify";
 
 const SocialLogin = () => {
-  const { reader, setReader, googleSignInFunc, githubSignInFunc } =
-    use(AuthContext);
+  const {
+    reader,
+    setReader,
+    googleSignInFunc,
+    githubSignInFunc,
+
+    setLoading,
+  } = use(AuthContext);
 
   const handleGoogleSignIn = () => {
     if (reader) {
       toast.info("You are already Logged in");
+
       return;
     }
     googleSignInFunc()
       .then((res) => {
         console.log(res);
         setReader(res.user);
+        setLoading(false);
         toast.success("Sign In Successful");
       })
       .catch((err) => {
         console.log(err);
+        setLoading(false);
         toast.error("Google Log in Failed");
       });
   };
@@ -34,10 +43,12 @@ const SocialLogin = () => {
       .then((res) => {
         console.log(res);
         setReader(res.user);
+        setLoading(false);
         toast.success("Sign In Successful");
       })
       .catch((err) => {
         console.log(err);
+        setLoading(false);
         toast.error("Github Log in Failed");
       });
   };

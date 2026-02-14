@@ -12,6 +12,8 @@ const Login = () => {
     reader,
     auth,
     setReader,
+
+    setLoading,
     signInWithEmailAndPassFunc,
     sendPassResetEmailFunc,
   } = use(AuthContext);
@@ -44,7 +46,9 @@ const Login = () => {
           return;
         }
         setReader(res.user);
+
         toast.success("Logged in Successfully");
+        setLoading(false);
         navigate("/");
       })
       .catch((err) => {

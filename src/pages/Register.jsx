@@ -12,6 +12,8 @@ const Register = () => {
     createUserWithEmailAndPassFunc,
     sendEmailVerificationFunc,
     updateProfileFunc,
+
+    setLoading,
   } = use(AuthContext);
 
   const navigate = useNavigate();
@@ -35,7 +37,7 @@ const Register = () => {
 
     createUserWithEmailAndPassFunc(email, password)
       .then((res) => {
-        updateProfileFunc(photoURL, displayName)
+        updateProfileFunc(displayName, photoURL)
           .then(() => {
             sendEmailVerificationFunc()
               .then(() => {
@@ -43,6 +45,7 @@ const Register = () => {
                 toast.success(
                   "Account created successfully! Please verify your email before login.",
                 );
+                setLoading(false);
                 navigate("/auth/login");
               })
               .catch((err) => {
@@ -104,14 +107,15 @@ const Register = () => {
             <label className="text-[16px] font-semibold mb-1">Your Name</label>
             <input
               name="name"
-              className="input w-full mb-4 bg-blue-100"
-              placeholder="Your Name"
+              className="input w-full bg-blue-100 mb-4"
+              placeholder="Name"
               required
             />
+
             <label className="text-[16px] font-semibold mb-1">Photo URL</label>
             <input
               name="photo"
-              className="input w-full bg-blue-100 mb-4"
+              className="input w-full mb-4 bg-blue-100"
               placeholder="Photo URL"
               required
             />
